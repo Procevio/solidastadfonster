@@ -490,7 +490,9 @@ class ThemeToggle {
         const isDark = savedTheme === 'dark';
         
         if (isDark) {
-            document.body.classList.add('dark-theme');
+            document.body.setAttribute('data-theme', 'dark');
+        } else {
+            document.body.setAttribute('data-theme', 'light');
         }
         
         // Update theme icons
@@ -510,8 +512,9 @@ class ThemeToggle {
 
     toggleTheme() {
         console.log('🎨 Theme toggle klickad');
-        document.body.classList.toggle('dark-theme');
-        const isDark = document.body.classList.contains('dark-theme');
+        const currentTheme = document.body.getAttribute('data-theme');
+        const isDark = currentTheme === 'light';
+        document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
         console.log(`🎨 Tema ändrat till: ${isDark ? 'mörkt' : 'ljust'}`);
         
@@ -926,6 +929,10 @@ class QuoteCalculator {
 
     init() {
         console.log('🎨 QuoteCalculator initialiserad');
+        
+        // Visa navigation bar
+        this.showNavigationBar();
+        
         this.setupTabNavigation();
         this.setupServiceListeners();
         this.setupFormListeners();
@@ -976,6 +983,11 @@ class QuoteCalculator {
                 // Transfer customer data when switching to work description tab
                 if (targetTab === 'arbetsbeskrivning') {
                     this.transferCustomerDataToWorkDescription();
+                }
+                
+                // Transfer customer data when switching to tilläggstjänst tab
+                if (targetTab === 'tillaggtjanst') {
+                    this.transferCustomerDataToTillaggstjanst();
                 }
             });
         });
@@ -1650,6 +1662,26 @@ class QuoteCalculator {
         this.updateCleaningWorkDescription();
         
         console.log('📋 Kunddata överförd från Anbud till Arbetsbeskrivning');
+    }
+    
+    transferCustomerDataToTillaggstjanst() {
+        const customerFieldMapping = {
+            'company': 'tillagg-customer-company',
+            'contact_person': 'tillagg-customer-contact',
+            'email': 'tillagg-customer-email',
+            'address': 'tillagg-customer-address'
+        };
+        
+        Object.entries(customerFieldMapping).forEach(([quoteFieldId, tillaggFieldId]) => {
+            const quoteField = document.getElementById(quoteFieldId);
+            const tillaggField = document.getElementById(tillaggFieldId);
+            
+            if (quoteField && tillaggField && quoteField.value.trim()) {
+                tillaggField.value = quoteField.value;
+            }
+        });
+        
+        console.log('📋 Kunddata överförd från Anbud till Tilläggstjänst');
     }
     
     generateDetailedWorkDescription() {
@@ -2978,6 +3010,16 @@ class QuoteCalculator {
         
         console.log('✅ Arbetsbeskrivning uppdaterad för städtjänster');
     }
+    
+    showNavigationBar() {
+        const navigationBar = document.querySelector('.navigation-bar');
+        if (navigationBar) {
+            navigationBar.classList.add('visible');
+            console.log('✅ Navigation bar visas från QuoteCalculator');
+        } else {
+            console.warn('⚠️ Navigation bar hittades inte från QuoteCalculator');
+        }
+    }
 }
 
 // =================
@@ -2997,7 +3039,7 @@ class AdditionalServiceManager {
     
     setupModal() {
         this.modal = document.getElementById('additional-service-modal');
-        this.form = document.getElementById('additional-service-form');
+        this.form = document.getElementById('tillaggtjanst-form');
         this.openBtn = document.getElementById('additional-service-btn');
         this.closeBtn = document.getElementById('additional-service-close');
         this.cancelBtn = document.getElementById('additional-service-cancel');
@@ -3007,9 +3049,9 @@ class AdditionalServiceManager {
         // Setup fullscreen signature elements
         this.signatureModal = document.getElementById('signature-fullscreen-modal');
         this.fullscreenCanvas = document.getElementById('signature-fullscreen-canvas');
-        this.signaturePreview = document.getElementById('signature-preview');
-        this.signaturePlaceholder = this.signaturePreview.querySelector('.signature-placeholder');
-        this.signatureImage = document.getElementById('signature-image');
+        this.signaturePreview = document.getElementById('tillagg-signature-preview');
+        this.signaturePlaceholder = this.signaturePreview?.querySelector('.signature-placeholder');
+        this.signatureImage = document.getElementById('tillagg-signature-image');
         
         // Setup fullscreen canvas
         if (this.fullscreenCanvas) {
@@ -3080,14 +3122,14 @@ class AdditionalServiceManager {
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         }
         
-        // Fullscreen signature button
-        const fullscreenBtn = document.getElementById('signature-fullscreen-btn');
+        // Fullscreen signature button (tab version)
+        const fullscreenBtn = document.getElementById('tillagg-signature-fullscreen-btn');
         if (fullscreenBtn) {
             fullscreenBtn.addEventListener('click', () => this.openFullscreenSignature());
         }
         
-        // Clear signature button
-        const clearBtn = document.getElementById('clear-signature');
+        // Clear signature button (tab version)
+        const clearBtn = document.getElementById('tillagg-clear-signature');
         if (clearBtn) {
             clearBtn.addEventListener('click', () => this.clearSignature());
         }
@@ -3439,8 +3481,8 @@ class AdditionalServiceManager {
     }
     
     validateForm() {
-        const serviceTypeEl = document.getElementById('additional-service-type');
-        const servicePriceEl = document.getElementById('additional-service-price');
+        const serviceTypeEl = document.getElementById('tillagg-service-type');
+        const servicePriceEl = document.getElementById('tillagg-service-price');
         
         if (!serviceTypeEl || !serviceTypeEl.value.trim()) {
             this.showError('Vänligen ange typ av tilläggstjänst');
@@ -3470,8 +3512,8 @@ class AdditionalServiceManager {
             return;
         }
         
-        const submitBtn = document.getElementById('additional-service-submit');
-        const spinner = document.getElementById('additional-service-loading');
+        const submitBtn = document.getElementById('tillagg-submit-btn');
+        const spinner = document.getElementById('tillagg-loading-spinner');
         
         // Show loading state
         submitBtn.disabled = true;
@@ -3494,12 +3536,12 @@ class AdditionalServiceManager {
     collectFormData() {
         const originalAnbudsId = this.generateAnbudsId();
         
-        const nameEl = document.getElementById('additional-customer-name');
-        const phoneEl = document.getElementById('additional-customer-phone');
-        const addressEl = document.getElementById('additional-customer-address');
-        const typeEl = document.getElementById('additional-service-type');
-        const priceEl = document.getElementById('additional-service-price');
-        const commentEl = document.getElementById('additional-service-comment');
+        const nameEl = document.getElementById('tillagg-customer-company');
+        const phoneEl = document.getElementById('tillagg-customer-contact');
+        const addressEl = document.getElementById('tillagg-customer-address');
+        const typeEl = document.getElementById('tillagg-service-type');
+        const priceEl = document.getElementById('tillagg-service-price');
+        const commentEl = document.getElementById('tillagg-service-comment');
         
         // Signatur-data för Zapier
         const signatureBase64 = this.getSignatureBase64();
@@ -3532,7 +3574,7 @@ class AdditionalServiceManager {
     
     generateAnbudsId() {
         // Generate a simple anbud ID based on customer info and timestamp
-        const nameEl = document.getElementById('additional-customer-name');
+        const nameEl = document.getElementById('tillagg-customer-company');
         const customerName = nameEl ? nameEl.value : 'UNKNOWN';
         const timestamp = Date.now();
         const nameCode = customerName.replace(/[^A-Z0-9]/gi, '').toUpperCase().substring(0, 6) || 'NONAME';
@@ -3558,7 +3600,7 @@ class AdditionalServiceManager {
     }
     
     showError(message) {
-        const errorEl = document.getElementById('signature-error');
+        const errorEl = document.getElementById('tillagg-signature-error');
         if (errorEl) {
             errorEl.textContent = message;
             errorEl.style.display = 'block';
@@ -3566,25 +3608,27 @@ class AdditionalServiceManager {
     }
     
     hideError() {
-        const errorEl = document.getElementById('signature-error');
+        const errorEl = document.getElementById('tillagg-signature-error');
         if (errorEl) {
             errorEl.style.display = 'none';
         }
     }
     
     showSuccess() {
-        const formEl = document.getElementById('additional-service-form');
-        const successEl = document.getElementById('additional-service-success');
+        const formEl = document.getElementById('tillaggtjanst-form');
+        const successEl = document.getElementById('tillagg-success-message');
         
         if (formEl) formEl.style.display = 'none';
         if (successEl) successEl.style.display = 'block';
         
-        // Close modal after 3 seconds
+        // Hide success message after 5 seconds
         setTimeout(() => {
-            this.closeModal();
             if (formEl) formEl.style.display = 'block';
             if (successEl) successEl.style.display = 'none';
-        }, 3000);
+            // Reset form
+            if (formEl) formEl.reset();
+            this.clearSignature();
+        }, 5000);
     }
     
     hideSuccess() {
