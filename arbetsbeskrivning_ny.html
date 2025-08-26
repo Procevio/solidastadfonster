@@ -1,0 +1,97 @@
+                <!-- Kontaktinformation -->
+                <section class="form-section">
+                    <h3>Kontaktinformation</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="arb-company">Företag/Namn *</label>
+                            <input type="text" id="arb-company" name="arb-company" autocomplete="organization" required readonly>
+                            <div class="error-message" id="arb-company-error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="arb-contact_person">Kontaktperson</label>
+                            <input type="text" id="arb-contact_person" name="arb-contact_person" autocomplete="name" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="arb-email">E-post *</label>
+                            <input type="email" id="arb-email" name="arb-email" autocomplete="email" required readonly>
+                            <div class="error-message" id="arb-email-error"></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="arb-phone">Telefonnummer *</label>
+                            <input type="tel" id="arb-phone" name="arb-phone" autocomplete="tel" inputmode="tel" required readonly>
+                            <div class="error-message" id="arb-phone-error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="arb-address">Adress *</label>
+                            <input type="text" id="arb-address" name="arb-address" autocomplete="address-line1" required readonly>
+                            <div class="error-message" id="arb-address-error"></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="arb-fastighetsbeteckning">Fastighetsbeteckning</label>
+                            <input type="text" id="arb-fastighetsbeteckning" name="arb-fastighetsbeteckning" placeholder="T.ex. Exempel 1:23" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="arb-postal_code">Postnummer *</label>
+                            <input type="text" id="arb-postal_code" name="arb-postal_code" pattern="[0-9]{5}" autocomplete="postal-code" inputmode="numeric" required readonly>
+                            <div class="error-message" id="arb-postal_code-error"></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="arb-city">Ort *</label>
+                            <input type="text" id="arb-city" name="arb-city" autocomplete="address-level2" required readonly>
+                            <div class="error-message" id="arb-city-error"></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Projektbeskrivning -->
+                <section class="form-section">
+                    <h3>Arbetsbeskrivning</h3>
+                    
+                    <div class="form-group">
+                        <label for="arb-beskrivning">Arbetsbeskrivning baserad på valda tjänster *</label>
+                        <textarea id="arb-beskrivning" name="arb-beskrivning" rows="25" required readonly placeholder="Välj tjänster under Anbud-fliken så genereras en detaljerad arbetsbeskrivning automatiskt här." class="work-description-textarea"></textarea>
+                    </div>
+                </section>
+
+                <!-- GDPR sektion -->
+                <section class="form-section gdpr-section">
+                    <div class="gdpr-consent-group">
+                        <label class="checkbox-label gdpr-consent">
+                            <input type="checkbox" id="arb-gdpr-consent" name="arb-gdpr-consent" required>
+                            <span class="checkmark"></span>
+                            Jag godkänner behandling av personuppgifter för anbud och kontakt enligt GDPR
+                        </label>
+                        <div class="error-message" id="arb-gdpr-consent-error"></div>
+                        <div class="gdpr-info">
+                            <a href="#" id="arb-gdpr-details-link" class="privacy-link">Läs mer om dataskydd</a>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Tilläggstjänst knapp -->
+                <div class="form-actions">
+                    <button type="button" class="additional-service-btn" id="additional-service-btn">
+                        <span class="btn-text">Lägg till tilläggstjänst</span>
+                    </button>
+                </div>
+
+                <!-- Submit knapp -->
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn" id="arb-submit-btn">
+                        <span class="btn-text">Begär arbetsbeskrivning</span>
+                        <div class="loading-spinner" id="arb-loading-spinner"></div>
+                    </button>
+                </div>

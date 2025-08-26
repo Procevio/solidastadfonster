@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solida Städ & Fönsterputs AB - Anbudsapp</title>
+    <meta name="description" content="Professionell fönsterputsapp för prisberäkning och anbudshantering">
+    <meta name="keywords" content="fönsterputs, fönsterrengöring, glasrengöring, byggstädning, ROT-avdrag">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-theme="light">
+    <!-- Lösenordsskydd -->
+    <div id="password-overlay" class="password-overlay" style="display: flex;">
+        <div class="password-container">
+            <div class="password-header">
+                <img src="assets/images/solida-fonsterputs-logotyp-v2.png" alt="Solida Städ & Fönsterputs AB" class="password-logo">
+                <h2>Välkommen till Solida Städ & Fönsterputs AB</h2>
+                <p>Ange lösenord för att komma åt anbudsformuläret</p>
+            </div>
+            
+            <form id="password-form" class="password-form">
+                <div class="password-input-group">
+                    <label for="password-input">Lösenord:</label>
+                    <input type="password" id="password-input" name="password" placeholder="Ange lösenord..." required>
+                    <button type="submit" class="password-submit-btn">Logga in</button>
+                </div>
+                <div id="password-error" class="password-error" style="display: none;">
+                    Felaktigt lösenord. Kontakta Solida Städ & Fönsterputs AB för åtkomst.
+                </div>
+            </form>
+            
+            <div class="password-footer">
+                <p>© 2024 Solida Städ & Fönsterputs AB</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div id="mainContainer" class="main-container" style="display: none;">
+        <div class="header">
+            <div class="logo-section">
+                <img src="assets/images/solida-fonsterputs-logotyp-v2.png" alt="Solida Städ & Fönsterputs AB" class="company-logo">
+                <h1 class="demo-text">DEMO</h1>
+            </div>
+            
+            <nav class="navigation-bar">
+                <button id="logout-btn" class="nav-btn logout-btn" title="Logga ut">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path>
+                        <polyline points="16,17 21,12 16,7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span class="nav-label">Logga ut</span>
+                </button>
+                
+                <button id="reset-btn" class="nav-btn reset-btn" title="Återställ formulär">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                        <path d="M3 3v5h5"></path>
+                    </svg>
+                    <span class="nav-label">Återställ</span>
+                </button>
+                
+                <button id="theme-toggle" class="nav-btn theme-toggle" title="Växla mellan ljust och mörkt tema">
+                    <svg class="nav-icon theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="nav-icon theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+                    <span class="nav-label">Tema</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="stadtjanster">Städtjänster</button>
+            <button class="tab-button" data-tab="arbetsbeskrivning">Arbetsbeskrivning</button>
+        </div>
+
+        <!-- Städtjänster Tab Content -->
+        <div id="stadtjanster" class="tab-content active">
+            <form id="stadtjanster-form" class="quote-form">
+                
+                <!-- Lägenhetsinformation -->
+                <section class="form-section">
+                    <h2>Lägenhetsinformation</h2>
+                    
+                    <div class="form-group">
+                        <label for="bostadstyp">Välj bostadstyp</label>
+                        <select id="bostadstyp" name="bostadstyp" required>
+                            <option value="">Välj bostadstyp...</option>
+                            <option value="1a_30kvm">1:a (30 kvm)</option>
+                            <option value="1a_40kvm">1:a (40 kvm)</option>
+                            <option value="2a_50kvm">2:a (50 kvm)</option>
+                            <option value="2a_60kvm">2:a (60 kvm)</option>
+                            <option value="3a_70kvm">3:a (70 kvm)</option>
+                            <option value="4a_90kvm">4:a (90 kvm)</option>
+                            <option value="enplansvilla_100kvm">Enplansvilla (100 kvm)</option>
+                            <option value="tvåplansvilla_140kvm">Tvåplansvilla (140 kvm)</option>
+                        </select>
+                        <div class="error-message" id="bostadstyp-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stadfrekvens">Hur ofta vill du ha städning?</label>
+                        <select id="stadfrekvens" name="stadfrekvens" required>
+                            <option value="">Välj frekvens...</option>
+                            <option value="varje_vecka">Varje vecka</option>
+                            <option value="varannan_vecka">Varannan vecka</option>
+                            <option value="varje_manad">Varje månad</option>
+                            <option value="endast_denna_gang">Endast den här gången</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Tjänstval -->
+                <section class="form-section">
+                    <h2>Tjänstval</h2>
+                    
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="hemstadning" name="stadtjanster" value="hemstadning">
+                            <label for="hemstadning">Hemstädning</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="storstadning" name="stadtjanster" value="storstadning">
+                            <label for="storstadning">Storstädning</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="flyttstadning" name="stadtjanster" value="flyttstadning">
+                            <label for="flyttstadning">Flyttstädning</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="visningsstadning" name="stadtjanster" value="visningsstadning">
+                            <label for="visningsstadning">Visningsstädning</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="kontorstadning" name="stadtjanster" value="kontorstadning">
+                            <label for="kontorstadning">Kontorsstädning</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fonsterputs" name="stadtjanster" value="fonsterputs">
+                            <label for="fonsterputs">Fönsterputs</label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FÖNSTERPUTS DETALJER (visas endast om Fönsterputs är kryssad) -->
+                <div id="fonsterputs-tillagg" style="display: none;">
+                    <section class="form-section">
+                        <h3>Fönsterputs - Detaljinformation</h3>
+                        
+                        <!-- FASTIGHET -->
+                        <div class="form-group">
+                            <label for="fp_fastighet">Vilken typ av fastighet gäller det?</label>
+                            <select id="fp_fastighet" name="fp_fastighet">
+                                <option value="">Välj fastighetstyp...</option>
+                                <option value="villa_radhus">Villa/Radhus</option>
+                                <option value="lagenhet">Lägenhet</option>
+                                <option value="affarslokal">Affärslokal</option>
+                                <option value="kommersiell_lokal">Kommersiell lokal</option>
+                                <option value="restaurang">Restaurang</option>
+                            </select>
+                        </div>
+
+                        <!-- FÖNSTERTYP -->
+                        <div class="form-group">
+                            <label for="fp_fonstertyp">Vilken typ av fönster gäller det?</label>
+                            <select id="fp_fonstertyp" name="fp_fonstertyp">
+                                <option value="">Välj fönstertyp...</option>
+                                <option value="standardfonster">Standardfönster</option>
+                                <option value="blandat">Blandat</option>
+                                <option value="stora_partier">Stora fönsterpartier</option>
+                            </select>
+                        </div>
+
+                        <!-- HUR ÖPPNAS FÖNSTREN -->
+                        <div class="form-group">
+                            <label>Hur öppnas fönstren?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_oppning" value="utat">
+                                    <span class="radio-custom"></span>
+                                    Utåt
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_oppning" value="inat">
+                                    <span class="radio-custom"></span>
+                                    Inåt
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_oppning" value="gar_ej_oppna">
+                                    <span class="radio-custom"></span>
+                                    Går ej att öppna
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- HAR FÖNSTREN SPRÖJS -->
+                        <div class="form-group">
+                            <label>Har fönstren spröjs?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_sprojs" value="ja">
+                                    <span class="radio-custom"></span>
+                                    Ja
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_sprojs" value="nej">
+                                    <span class="radio-custom"></span>
+                                    Nej
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- SPRÖJS-DETALJER (visas endast om "Ja" på spröjs) -->
+                        <div class="form-group" id="fp_sprojs_detaljer" style="display: none;">
+                            <label>Typ av spröjs:</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_sprojs_typ" value="fast">
+                                    <span class="radio-custom"></span>
+                                    Fönster med fast spröjs
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_sprojs_typ" value="lostagbart">
+                                    <span class="radio-custom"></span>
+                                    Fönster med löstagbart spröjs
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- ANTAL RUTOR (visas endast om fast spröjs) -->
+                        <div class="form-group" id="fp_antal_rutor_section" style="display: none;">
+                            <label for="fp_antal_rutor">Hur många små rutor i rutan?</label>
+                            <input type="number" id="fp_antal_rutor" name="fp_antal_rutor" min="1" max="50">
+                        </div>
+
+                        <!-- TYP AV RENGÖRING -->
+                        <div class="form-group">
+                            <label>Typ av rengöring:</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_rengoring" value="invandig_utvandig">
+                                    <span class="radio-custom"></span>
+                                    Invändig och utvändig rengöring
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_rengoring" value="bara_invandig">
+                                    <span class="radio-custom"></span>
+                                    Bara invändig rengöring
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_rengoring" value="bara_utvandig">
+                                    <span class="radio-custom"></span>
+                                    Bara utvändig rengöring
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- ANTAL FÖNSTER -->
+                        <div class="form-group">
+                            <label for="fp_antal_fonster">Hur många fönster gäller det?</label>
+                            <input type="number" id="fp_antal_fonster" name="fp_antal_fonster" min="1" max="1000">
+                        </div>
+
+                        <!-- ANTAL SIDOR -->
+                        <div class="form-group">
+                            <label for="fp_antal_sidor">Hur många sidor ska putsas?</label>
+                            <select id="fp_antal_sidor" name="fp_antal_sidor">
+                                <option value="">Välj antal sidor...</option>
+                                <option value="2">2 sidor</option>
+                                <option value="4">4 sidor</option>
+                                <option value="6">6 sidor</option>
+                            </select>
+                        </div>
+
+                        <!-- TILLGÄNGLIGHET -->
+                        <div class="form-group">
+                            <label>Ska fönsterkarmar rengöras och torkas?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_karmar" value="ja">
+                                    <span class="radio-custom"></span>
+                                    Ja
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_karmar" value="nej">
+                                    <span class="radio-custom"></span>
+                                    Nej
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sitter fönstren svåråtkomligt så stege behövs?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_stege" value="ja">
+                                    <span class="radio-custom"></span>
+                                    Ja
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_stege" value="nej">
+                                    <span class="radio-custom"></span>
+                                    Nej
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Behövs skylift eller kran?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_skylift" value="ja">
+                                    <span class="radio-custom"></span>
+                                    Ja
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="fp_skylift" value="nej">
+                                    <span class="radio-custom"></span>
+                                    Nej
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Prisvisning för fönsterputs -->
+                        <div class="price-display" id="fonsterputs-price-display" style="display: none;">
+                            <h4>Fönsterputs kostnad</h4>
+                            <div class="price-breakdown">
+                                <span class="price-label">Fönsterputs kostnad:</span>
+                                <span class="price-amount" id="fonsterputs-price">0 kr</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Kundinformation -->
+                <section class="form-section">
+                    <h2>Kundinformation</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customer-company">Företag/Namn *</label>
+                            <input type="text" id="customer-company" name="customer-company" autocomplete="organization" required>
+                            <div class="error-message" id="customer-company-error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customer-contact">Kontaktperson</label>
+                            <input type="text" id="customer-contact" name="customer-contact" autocomplete="name">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="customer-email">E-post *</label>
+                            <input type="email" id="customer-email" name="customer-email" autocomplete="email" required>
+                            <div class="error-message" id="customer-email-error"></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="customer-phone">Telefonnummer *</label>
+                            <input type="tel" id="customer-phone" name="customer-phone" autocomplete="tel" inputmode="tel" required>
+                            <div class="error-message" id="customer-phone-error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="customer-address">Adress *</label>
+                            <input type="text" id="customer-address" name="customer-address" autocomplete="address-line1" required>
+                            <div class="error-message" id="customer-address-error"></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="customer-fastighetsbeteckning">Fastighetsbeteckning</label>
+                            <input type="text" id="customer-fastighetsbeteckning" name="customer-fastighetsbeteckning" placeholder="T.ex. Exempel 1:23">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="customer-postal-code">Postnummer *</label>
+                            <input type="text" id="customer-postal-code" name="customer-postal-code" autocomplete="postal-code" pattern="[0-9]{5}" inputmode="numeric" required>
+                            <div class="error-message" id="customer-postal-code-error"></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="customer-city">Ort *</label>
+                            <input type="text" id="customer-city" name="customer-city" autocomplete="address-level2" required>
+                            <div class="error-message" id="customer-city-error"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Akut/Jourservice -->
+                <section class="form-section">
+                    <h2>Akut/Jourservice</h2>
+                    
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="akut-service" name="akut-service" value="ja">
+                            <label for="akut-service">Akuttjänst (samma dag/nästa dag) - +50% pristillägg</label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Frekvens & Schema (visas endast för Hemstädning) -->
+                <div id="hemstadning-schema" style="display: none;">
+                    <section class="form-section">
+                        <h2>Frekvens & Schema</h2>
+                        
+                        <div class="form-group">
+                            <label for="preferred-day">Vilken dag passar bäst?</label>
+                            <select id="preferred-day" name="preferred-day">
+                                <option value="">Välj dag...</option>
+                                <option value="måndag">Måndag</option>
+                                <option value="tisdag">Tisdag</option>
+                                <option value="onsdag">Onsdag</option>
+                                <option value="torsdag">Torsdag</option>
+                                <option value="fredag">Fredag</option>
+                                <option value="helger">Helger</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="preferred-time">Föredragen tid på dagen?</label>
+                            <select id="preferred-time" name="preferred-time">
+                                <option value="">Välj tid...</option>
+                                <option value="förmiddag">Förmiddag 08-12</option>
+                                <option value="eftermiddag">Eftermiddag 12-17</option>
+                                <option value="kväll">Kvällstid 17-20</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start-date">Startdatum för första städning?</label>
+                            <input type="date" id="start-date" name="start-date">
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Tillgänglighet & Nyckelhantering -->
+                <section class="form-section">
+                    <h2>Tillgänglighet & Nyckelhantering</h2>
+                    
+                    <div class="form-group">
+                        <label for="access-method">Hur kommer vi in?</label>
+                        <select id="access-method" name="access-method">
+                            <option value="">Välj alternativ...</option>
+                            <option value="hemma">Hemma under städning</option>
+                            <option value="nyckel">Nyckel finns tillgänglig</option>
+                            <option value="kodlås">Kodlås</option>
+                            <option value="porttelefon">Porttelefon</option>
+                            <option value="övrigt">Övrigt</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Husdjur & Allergier -->
+                <section class="form-section">
+                    <h2>Husdjur & Allergier</h2>
+                    
+                    <div class="form-group">
+                        <label for="pets">Finns husdjur i hemmet?</label>
+                        <select id="pets" name="pets">
+                            <option value="">Välj alternativ...</option>
+                            <option value="hund">Ja - hund</option>
+                            <option value="katt">Ja - katt</option>
+                            <option value="annat">Ja - annat djur</option>
+                            <option value="nej">Nej</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="allergies">Några allergier eller önskemål om rengöringsprodukter?</label>
+                        <textarea id="allergies" name="allergies" rows="3" placeholder="T.ex. miljövänliga produkter, parfymfritt, astma..."></textarea>
+                    </div>
+                </section>
+
+                <!-- Parkeringsmöjligheter -->
+                <section class="form-section">
+                    <h2>Parkeringsmöjligheter</h2>
+                    
+                    <div class="form-group">
+                        <label for="parking">Finns parkering nära fastigheten?</label>
+                        <select id="parking" name="parking">
+                            <option value="">Välj alternativ...</option>
+                            <option value="gratis">Ja - gratis</option>
+                            <option value="avgift">Ja - avgift</option>
+                            <option value="gångavstånd">Nej - gångavstånd</option>
+                            <option value="vet_ej">Vet ej</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Estimerad tidsåtgång -->
+                <section class="form-section">
+                    <h2>Estimerad tidsåtgång</h2>
+                    
+                    <div id="estimated-time-display" class="info-display" style="display: none;">
+                        <h4>Beräknad tid för städning</h4>
+                        <p id="estimated-time-text">Välj bostadstyp för att se estimerad tid</p>
+                    </div>
+                </section>
+
+                <!-- Prisberäkning -->
+                <section class="form-section price-section" style="display: none;" id="main-price-section">
+                    <h3>Prisberäkning</h3>
+                    <div class="price-breakdown">
+                        <div class="price-category">
+                            <div class="price-row">
+                                <span>Städtjänster grundkostnad:</span>
+                                <span id="stad-grundpris">0 kr</span>
+                            </div>
+                            <div class="price-row" id="fonster-price-row" style="display: none;">
+                                <span>Fönsterputs:</span>
+                                <span id="fonsterputs-price">0 kr</span>
+                            </div>
+                            <div class="price-row" id="akut-price-row" style="display: none;">
+                                <span>Akuttjänst-tillägg (50%):</span>
+                                <span id="akut-tillagg-price">0 kr</span>
+                            </div>
+                        </div>
+                        
+                        <div class="price-separator"></div>
+                        
+                        <div class="price-category">
+                            <div class="price-row">
+                                <span>Totalsumma exkl. moms:</span>
+                                <span id="subtotal-price-display">0 kr</span>
+                            </div>
+                            <div class="price-row total">
+                                <span><strong>Totalt inkl. moms (25%):</strong></span>
+                                <span id="total-with-vat"><strong>0 kr</strong></span>
+                            </div>
+                        </div>
+                        
+                        <div class="price-separator final-separator"></div>
+                        
+                        <div class="price-category final-price">
+                            <div class="price-row customer-pays">
+                                <span><strong>KUNDEN BETALAR:</strong></span>
+                                <span id="final-customer-price"><strong>0 kr</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </form>
+        </div>
+
+        <!-- Arbetsbeskrivning Tab Content -->
+        <div id="arbetsbeskrivning" class="tab-content">
+            <form id="arbetsbeskrivning-form" class="quote-form">
+                
+                <!-- Kontaktinformation -->
+                <section class="form-section">
+                    <h3>Kontaktinformation</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="arb-company">Företag/Namn *</label>
+                            <input type="text" id="arb-company" name="arb-company" autocomplete="organization" required readonly>
+                            <div class="error-message" id="arb-company-error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="arb-contact_person">Kontaktperson</label>
+                            <input type="text" id="arb-contact_person" name="arb-contact_person" autocomplete="name" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="arb-email">E-post *</label>
+                            <input type="email" id="arb-email" name="arb-email" autocomplete="email" required readonly>
+                            <div class="error-message" id="arb-email-error"></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="arb-phone">Telefonnummer *</label>
+                            <input type="tel" id="arb-phone" name="arb-phone" autocomplete="tel" inputmode="tel" required readonly>
+                            <div class="error-message" id="arb-phone-error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="arb-address">Adress *</label>
+                            <input type="text" id="arb-address" name="arb-address" autocomplete="address-line1" required readonly>
+                            <div class="error-message" id="arb-address-error"></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="arb-fastighetsbeteckning">Fastighetsbeteckning</label>
+                            <input type="text" id="arb-fastighetsbeteckning" name="arb-fastighetsbeteckning" placeholder="T.ex. Exempel 1:23" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="arb-postal_code">Postnummer *</label>
+                            <input type="text" id="arb-postal_code" name="arb-postal_code" pattern="[0-9]{5}" autocomplete="postal-code" inputmode="numeric" required readonly>
+                            <div class="error-message" id="arb-postal_code-error"></div>
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="arb-city">Ort *</label>
+                            <input type="text" id="arb-city" name="arb-city" autocomplete="address-level2" required readonly>
+                            <div class="error-message" id="arb-city-error"></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Projektbeskrivning -->
+                <section class="form-section">
+                    <h3>Arbetsbeskrivning</h3>
+                    
+                    <div class="form-group">
+                        <label for="arb-beskrivning">Arbetsbeskrivning baserad på valda tjänster *</label>
+                        <textarea id="arb-beskrivning" name="arb-beskrivning" rows="25" required readonly placeholder="Välj tjänster under Anbud-fliken så genereras en detaljerad arbetsbeskrivning automatiskt här." class="work-description-textarea"></textarea>
+                    </div>
+                </section>
+
+                <!-- GDPR sektion -->
+                <section class="form-section gdpr-section">
+                    <div class="gdpr-consent-group">
+                        <label class="checkbox-label gdpr-consent">
+                            <input type="checkbox" id="arb-gdpr-consent" name="arb-gdpr-consent" required>
+                            <span class="checkmark"></span>
+                            Jag godkänner behandling av personuppgifter för anbud och kontakt enligt GDPR
+                        </label>
+                        <div class="error-message" id="arb-gdpr-consent-error"></div>
+                        <div class="gdpr-info">
+                            <a href="#" id="arb-gdpr-details-link" class="privacy-link">Läs mer om dataskydd</a>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Tilläggstjänst knapp -->
+                <div class="form-actions">
+                    <button type="button" class="additional-service-btn" id="additional-service-btn">
+                        <span class="btn-text">Lägg till tilläggstjänst</span>
+                    </button>
+                </div>
+
+                <!-- Submit knapp -->
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn" id="arb-submit-btn">
+                        <span class="btn-text">Begär arbetsbeskrivning</span>
+                        <div class="loading-spinner" id="arb-loading-spinner"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+            </form>
+
+            <!-- Success/Error meddelanden (exakt som Sternbecks) -->
+            <div id="success-message" class="message success-message" style="display: none;">
+                <h3>Tack för din förfrågan!</h3>
+                <p>Vi har mottagit din anbudsförfrågan och återkommer inom kort med ett kostnadsfritt anbud.</p>
+            </div>
+            <div id="error-message" class="message error-message" style="display: none;">
+                <h3>Ett fel uppstod</h3>
+                <p>Vi kunde inte skicka din förfrågan just nu. Vänligen försök igen eller kontakta oss direkt.</p>
+            </div>
+        </div> <!-- End of anbud-tab -->
+
+        <!-- Tilläggstjänst Modal -->
+        <div id="additional-service-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content additional-service-modal">
+                <div class="modal-header">
+                    <h2>Tilläggstjänst</h2>
+                    <button class="modal-close" id="additional-service-close">&times;</button>
+                </div>
+                
+                <form id="additional-service-form" class="additional-service-form">
+                    <!-- Kundinformation -->
+                    <section class="form-section">
+                        <h3>Kundinformation</h3>
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="additional-customer-name">Namn</label>
+                                <input type="text" id="additional-customer-name" name="additional-customer-name" readonly>
+                            </div>
+                            <div class="form-group half-width">
+                                <label for="additional-customer-phone">Telefon</label>
+                                <input type="text" id="additional-customer-phone" name="additional-customer-phone" readonly>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="additional-customer-address">Adress</label>
+                                <input type="text" id="additional-customer-address" name="additional-customer-address" readonly>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Tilläggstjänst detaljer -->
+                    <section class="form-section">
+                        <h3>Tilläggstjänst</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="additional-service-type">Typ av tillägg *</label>
+                                <input type="text" id="additional-service-type" name="additional-service-type" required 
+                                       placeholder="Beskriv den tilläggstjänst som utförs...">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="additional-service-price">Pris (kr) *</label>
+                                <input type="number" id="additional-service-price" name="additional-service-price" 
+                                       min="0" step="0.01" required placeholder="0.00">
+                            </div>
+                            <div class="form-group half-width">
+                                <label for="additional-service-comment">Kommentar</label>
+                                <textarea id="additional-service-comment" name="additional-service-comment" 
+                                          rows="3" placeholder="Valfri kommentar..."></textarea>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Signatur-sektion -->
+                    <section class="form-section signature-section">
+                        <h3>Signatur</h3>
+                        <div class="signature-info">
+                            <p><strong>Jag godkänner tilläggstjänsten enligt ovan</strong></p>
+                            <p class="signature-instruction">Signera med finger eller penna i rutan nedan:</p>
+                        </div>
+                        
+                        <div class="signature-container">
+                            <canvas id="signature-canvas" width="400" height="200"></canvas>
+                            <div class="signature-controls">
+                                <button type="button" class="clear-signature-btn" id="clear-signature">Rensa signatur</button>
+                            </div>
+                        </div>
+                        <div class="error-message" id="signature-error" style="display: none;">
+                            Signatur krävs för att godkänna tilläggstjänsten
+                        </div>
+                    </section>
+
+                    <!-- Modal actions -->
+                    <div class="modal-actions">
+                        <button type="button" class="cancel-btn" id="additional-service-cancel">Avbryt</button>
+                        <button type="submit" class="submit-btn" id="additional-service-submit">
+                            <span class="btn-text">Skicka tilläggstjänst</span>
+                            <div class="loading-spinner" id="additional-service-loading" style="display: none;"></div>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Success meddelande för tilläggstjänst -->
+                <div id="additional-service-success" class="message success-message" style="display: none;">
+                    <h3>Tilläggstjänst skickad!</h3>
+                    <p>Tilläggstjänsten har registrerats och kommer att behandlas tillsammans med ditt ursprungliga anbud.</p>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+
+    <!-- GDPR Modal -->
+    <div id="gdpr-modal" class="gdpr-modal" style="display: none;">
+        <div class="gdpr-modal-content">
+            <div class="gdpr-modal-header">
+                <h3>Dataskydd och Integritet</h3>
+                <button class="gdpr-modal-close" id="gdpr-modal-close">&times;</button>
+            </div>
+            <div class="gdpr-modal-body">
+                <p><strong>Solida Städ & Fönsterputs AB behandlar dina personuppgifter för att:</strong></p>
+                <ul>
+                    <li>Beräkna och skicka anbud</li>
+                    <li>Kontakta dig om projektet</li>
+                    <li>Arkivera för redovisning och garanti</li>
+                    <li>Följa upp kundnöjdhet</li>
+                </ul>
+                
+                <p>Uppgifterna lagras säkert i 7 år och delas aldrig vidare. Du kan begära utdrag, rättelse eller radering via 
+                <a href="mailto:info@solidafonsterputs.se">info@solidafonsterputs.se</a>.</p>
+                
+                <p><strong>Fullständig integritetspolicy</strong> finns på vår hemsida.</p>
+                
+                <p><em>Genom att kryssa i rutan ovan godkänner du denna behandling enligt GDPR.</em></p>
+            </div>
+            <div class="gdpr-modal-footer">
+                <button class="gdpr-modal-ok" id="gdpr-modal-ok">Stäng</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
