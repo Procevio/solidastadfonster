@@ -499,7 +499,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     background: var(--white);
     color: var(--text-primary);
     padding: var(--spacing-xl) 0;
-    margin: 0 -16px var(--spacing-lg) -16px;
+    margin: 0 -16px var(--spacing-sm) -16px;
     box-shadow: 0 2px 12px var(--shadow-subtle);
     text-align: center;
     border: 1px solid var(--border-light);
@@ -2302,14 +2302,14 @@ body[data-theme="dark"] .nav-btn::before {
 }
 
 .signature-control-btn {
-    padding: 0.75rem 1.5rem;
+    padding: 0.6rem 1.2rem;
     border: none;
-    border-radius: 8px;
-    font-size: 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    min-width: 120px;
+    min-width: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2401,12 +2401,12 @@ body[data-theme="dark"] .nav-btn::before {
     
     .signature-control-btn {
         padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-        min-width: 100px;
+        font-size: 0.85rem;
+        min-width: 90px;
     }
     
     .signature-fullscreen-canvas {
-        max-height: 60vh;
+        max-height: 85vh;
     }
 }
 

@@ -3088,10 +3088,11 @@ class AdditionalServiceManager {
         if (!this.fullscreenCtx) return;
         
         this.fullscreenCtx.strokeStyle = '#000000'; // Black for clear signature
-        this.fullscreenCtx.lineWidth = 3; // Thicker for mobile
+        this.fullscreenCtx.lineWidth = 4; // Optimal thickness for mobile
         this.fullscreenCtx.lineCap = 'round';
         this.fullscreenCtx.lineJoin = 'round';
         this.fullscreenCtx.imageSmoothingEnabled = true;
+        this.fullscreenCtx.imageSmoothingQuality = 'high';
     }
     
     setupEventListeners() {
@@ -3257,19 +3258,23 @@ class AdditionalServiceManager {
         const tempCanvas = document.createElement('canvas');
         const tempCtx = tempCanvas.getContext('2d');
         
-        // Set desired output size (300x150px as requested)
-        tempCanvas.width = 300;
-        tempCanvas.height = 150;
+        // Set desired output size (higher quality: 800x400px)
+        tempCanvas.width = 800;
+        tempCanvas.height = 400;
         
         // Fill with white background
         tempCtx.fillStyle = 'white';
         tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
         
-        // Scale and draw the signature
+        // Enable high-quality rendering
+        tempCtx.imageSmoothingEnabled = true;
+        tempCtx.imageSmoothingQuality = 'high';
+        
+        // Scale and draw the signature with high quality
         tempCtx.drawImage(this.fullscreenCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
         
-        // Convert to base64 PNG
-        this.signatureBase64 = tempCanvas.toDataURL('image/png');
+        // Convert to base64 PNG with maximum quality
+        this.signatureBase64 = tempCanvas.toDataURL('image/png', 1.0);
         
         // Update preview
         this.updateSignaturePreview();
@@ -3357,13 +3362,15 @@ class AdditionalServiceManager {
     
     getEventPoint(e, canvas) {
         const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
         const clientX = e.clientX || (e.touches && e.touches[0].clientX);
         const clientY = e.clientY || (e.touches && e.touches[0].clientY);
         
-        return {
-            x: clientX - rect.left,
-            y: clientY - rect.top
-        };
+        // Calculate accurate coordinates considering device pixel ratio and scaling
+        const x = (clientX - rect.left) * (canvas.width / rect.width) / dpr;
+        const y = (clientY - rect.top) * (canvas.height / rect.height) / dpr;
+        
+        return { x, y };
     }
     
     openModal() {
@@ -3541,6 +3548,7 @@ class AdditionalServiceManager {
         const addressEl = document.getElementById('tillagg-customer-address');
         const typeEl = document.getElementById('tillagg-service-type');
         const priceEl = document.getElementById('tillagg-service-price');
+        const dateEl = document.getElementById('tillagg-service-date');
         const commentEl = document.getElementById('tillagg-service-comment');
         
         // Signatur-data för Zapier
@@ -3556,6 +3564,7 @@ class AdditionalServiceManager {
             },
             tilläggstyp: typeEl ? typeEl.value : '',
             pris: priceEl ? parseFloat(priceEl.value) || 0 : 0,
+            datum: dateEl ? dateEl.value : '',
             kommentar: commentEl ? commentEl.value || '' : '',
             
             // Signatur-data för Zapier-integration
