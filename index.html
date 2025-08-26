@@ -738,9 +738,13 @@
                         </div>
                         
                         <div class="signature-container">
-                            <canvas id="signature-canvas" width="400" height="200"></canvas>
+                            <div class="signature-preview" id="signature-preview">
+                                <p class="signature-placeholder">Ingen signatur än</p>
+                                <img id="signature-image" style="display: none; max-width: 100%; height: auto;" />
+                            </div>
                             <div class="signature-controls">
-                                <button type="button" class="clear-signature-btn" id="clear-signature">Rensa signatur</button>
+                                <button type="button" class="signature-fullscreen-btn" id="signature-fullscreen-btn">Signera tilläggstjänst</button>
+                                <button type="button" class="clear-signature-btn" id="clear-signature" style="display: none;">Rensa signatur</button>
                             </div>
                         </div>
                         <div class="error-message" id="signature-error" style="display: none;">
@@ -760,8 +764,9 @@
 
                 <!-- Success meddelande för tilläggstjänst -->
                 <div id="additional-service-success" class="message success-message" style="display: none;">
-                    <h3>Tilläggstjänst skickad!</h3>
-                    <p>Tilläggstjänsten har registrerats och kommer att behandlas tillsammans med ditt ursprungliga anbud.</p>
+                    <h3>Tilläggstjänst och signatur skickad!</h3>
+                    <p>Tilläggstjänsten och din signatur har skickats till vårt system via Zapier-integration och kommer att behandlas tillsammans med ditt ursprungliga anbud.</p>
+                    <p><small>Signaturen sparas automatiskt i Google Drive kopplad till ditt anbud.</small></p>
                 </div>
             </div>
         </div>
@@ -794,6 +799,34 @@
             </div>
             <div class="gdpr-modal-footer">
                 <button class="gdpr-modal-ok" id="gdpr-modal-ok">Stäng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Signature Modal -->
+    <div id="signature-fullscreen-modal" class="signature-fullscreen-overlay" style="display: none;">
+        <div class="signature-fullscreen-content">
+            <div class="signature-fullscreen-header">
+                <h2>Signera Tilläggstjänst</h2>
+                <div class="signature-orientation-notice" id="signature-orientation-notice">
+                    <p>💡 Vänd telefonen till liggande läge för bästa signeringsupplevelse</p>
+                </div>
+            </div>
+            
+            <div class="signature-fullscreen-body">
+                <canvas id="signature-fullscreen-canvas" class="signature-fullscreen-canvas"></canvas>
+            </div>
+            
+            <div class="signature-fullscreen-controls">
+                <button type="button" class="signature-control-btn signature-clear-btn" id="signature-fullscreen-clear">
+                    <span>🗑️ Rensa</span>
+                </button>
+                <button type="button" class="signature-control-btn signature-cancel-btn" id="signature-fullscreen-cancel">
+                    <span>❌ Avbryt</span>
+                </button>
+                <button type="button" class="signature-control-btn signature-save-btn" id="signature-fullscreen-save">
+                    <span>✅ Spara Signering</span>
+                </button>
             </div>
         </div>
     </div>

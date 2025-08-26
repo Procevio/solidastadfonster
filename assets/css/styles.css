@@ -2201,3 +2201,229 @@ body.dark-theme {
 .dark-theme .nav-btn::before {
     background: linear-gradient(90deg, transparent, rgba(249, 250, 251, 0.1), transparent);
 }
+
+/* =================
+   FULLSCREEN SIGNATURE MODAL
+   ================= */
+
+.signature-fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signature-fullscreen-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    position: relative;
+}
+
+.signature-fullscreen-header {
+    padding: 1rem 2rem;
+    background: var(--primary-color);
+    color: white;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.signature-fullscreen-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.signature-orientation-notice {
+    margin-top: 0.5rem;
+}
+
+.signature-orientation-notice p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.signature-fullscreen-body {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+}
+
+.signature-fullscreen-canvas {
+    width: 100%;
+    height: 100%;
+    max-width: 90%;
+    max-height: 70vh;
+    background: white;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.signature-fullscreen-controls {
+    padding: 1rem 2rem;
+    background: var(--white);
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-top: 1px solid #dee2e6;
+    flex-shrink: 0;
+}
+
+.signature-control-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.signature-clear-btn {
+    background: #6c757d;
+    color: white;
+}
+
+.signature-clear-btn:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.signature-cancel-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.signature-cancel-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+.signature-save-btn {
+    background: #28a745;
+    color: white;
+}
+
+.signature-save-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}
+
+/* Signature preview styles */
+.signature-preview {
+    min-height: 120px;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.signature-placeholder {
+    color: #6c757d;
+    font-style: italic;
+    margin: 0;
+}
+
+.signature-fullscreen-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.signature-fullscreen-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Mobile landscape optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+    .signature-fullscreen-header {
+        padding: 0.5rem 1rem;
+    }
+    
+    .signature-fullscreen-header h2 {
+        font-size: 1.25rem;
+    }
+    
+    .signature-orientation-notice {
+        display: none;
+    }
+    
+    .signature-fullscreen-controls {
+        padding: 0.75rem 1rem;
+    }
+    
+    .signature-control-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        min-width: 100px;
+    }
+    
+    .signature-fullscreen-canvas {
+        max-height: 60vh;
+    }
+}
+
+/* Mobile portrait - show orientation notice */
+@media (max-width: 768px) and (orientation: portrait) {
+    .signature-orientation-notice {
+        background: rgba(255, 193, 7, 0.2);
+        padding: 0.5rem;
+        border-radius: 4px;
+        margin-top: 0.75rem;
+    }
+}
+
+/* Dark theme support for signature modal */
+.dark-theme .signature-fullscreen-content {
+    background: var(--surface-primary);
+}
+
+.dark-theme .signature-fullscreen-body {
+    background: var(--surface-secondary);
+}
+
+.dark-theme .signature-fullscreen-canvas {
+    background: var(--white);
+    border-color: var(--border-light);
+}
+
+.dark-theme .signature-fullscreen-controls {
+    background: var(--surface-primary);
+    border-color: var(--border-light);
+}
+
+.dark-theme .signature-preview {
+    background: var(--surface-light);
+    border-color: var(--border-light);
+}

@@ -37,6 +37,16 @@ exports.handler = async (event, context) => {
         try {
             anbudsData = JSON.parse(event.body);
             console.log('✅ Anbudsdata parsad framgångsrikt');
+        
+        // Log signatur-info if present
+        if (anbudsData.signatur_tillagd) {
+            console.log('🖊️ Signatur-data inkluderat:', {
+                har_signatur: !!anbudsData.signatur_base64,
+                signatur_timestamp: anbudsData.signatur_timestamp,
+                signatur_tillagd: anbudsData.signatur_tillagd,
+                base64_length: anbudsData.signatur_base64 ? anbudsData.signatur_base64.length : 0
+            });
+        }
         } catch (parseError) {
             console.error('❌ Fel vid parsning av JSON:', parseError);
             return {

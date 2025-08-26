@@ -3004,43 +3004,52 @@ class AdditionalServiceManager {
     }
     
     setupSignatureCanvas() {
-        this.canvas = document.getElementById('signature-canvas');
-        if (this.canvas) {
-            this.ctx = this.canvas.getContext('2d');
-            this.resizeCanvas();
-            this.setupCanvasStyles();
+        // Setup fullscreen signature elements
+        this.signatureModal = document.getElementById('signature-fullscreen-modal');
+        this.fullscreenCanvas = document.getElementById('signature-fullscreen-canvas');
+        this.signaturePreview = document.getElementById('signature-preview');
+        this.signaturePlaceholder = this.signaturePreview.querySelector('.signature-placeholder');
+        this.signatureImage = document.getElementById('signature-image');
+        
+        // Setup fullscreen canvas
+        if (this.fullscreenCanvas) {
+            this.fullscreenCtx = this.fullscreenCanvas.getContext('2d');
+            this.setupFullscreenCanvasStyles();
         }
+        
+        // Signature data storage
+        this.signatureBase64 = null;
     }
     
-    resizeCanvas() {
-        if (!this.canvas || !this.ctx) return;
+    resizeFullscreenCanvas() {
+        if (!this.fullscreenCanvas || !this.fullscreenCtx) return;
         
         // Get device pixel ratio for high DPI support
         const dpr = window.devicePixelRatio || 1;
-        const rect = this.canvas.getBoundingClientRect();
+        const rect = this.fullscreenCanvas.getBoundingClientRect();
         
         // Set the internal size to the display size multiplied by dpr
-        this.canvas.width = rect.width * dpr;
-        this.canvas.height = rect.height * dpr;
+        this.fullscreenCanvas.width = rect.width * dpr;
+        this.fullscreenCanvas.height = rect.height * dpr;
         
         // Scale the context to ensure correct drawing operations
-        this.ctx.scale(dpr, dpr);
+        this.fullscreenCtx.scale(dpr, dpr);
         
         // Set the display size to the original size
-        this.canvas.style.width = rect.width + 'px';
-        this.canvas.style.height = rect.height + 'px';
+        this.fullscreenCanvas.style.width = rect.width + 'px';
+        this.fullscreenCanvas.style.height = rect.height + 'px';
         
-        this.setupCanvasStyles();
+        this.setupFullscreenCanvasStyles();
     }
     
-    setupCanvasStyles() {
-        if (!this.ctx) return;
+    setupFullscreenCanvasStyles() {
+        if (!this.fullscreenCtx) return;
         
-        this.ctx.strokeStyle = '#2c3e50';
-        this.ctx.lineWidth = 2;
-        this.ctx.lineCap = 'round';
-        this.ctx.lineJoin = 'round';
-        this.ctx.imageSmoothingEnabled = true;
+        this.fullscreenCtx.strokeStyle = '#000000'; // Black for clear signature
+        this.fullscreenCtx.lineWidth = 3; // Thicker for mobile
+        this.fullscreenCtx.lineCap = 'round';
+        this.fullscreenCtx.lineJoin = 'round';
+        this.fullscreenCtx.imageSmoothingEnabled = true;
     }
     
     setupEventListeners() {
@@ -3071,56 +3080,248 @@ class AdditionalServiceManager {
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         }
         
+        // Fullscreen signature button
+        const fullscreenBtn = document.getElementById('signature-fullscreen-btn');
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', () => this.openFullscreenSignature());
+        }
+        
         // Clear signature button
         const clearBtn = document.getElementById('clear-signature');
         if (clearBtn) {
             clearBtn.addEventListener('click', () => this.clearSignature());
         }
         
-        // Signature canvas events
-        this.setupCanvasEvents();
+        // Fullscreen signature controls
+        const fullscreenClearBtn = document.getElementById('signature-fullscreen-clear');
+        const fullscreenCancelBtn = document.getElementById('signature-fullscreen-cancel');
+        const fullscreenSaveBtn = document.getElementById('signature-fullscreen-save');
         
-        // Window resize listener for canvas
+        if (fullscreenClearBtn) {
+            fullscreenClearBtn.addEventListener('click', () => this.clearFullscreenSignature());
+        }
+        
+        if (fullscreenCancelBtn) {
+            fullscreenCancelBtn.addEventListener('click', () => this.closeFullscreenSignature());
+        }
+        
+        if (fullscreenSaveBtn) {
+            fullscreenSaveBtn.addEventListener('click', () => this.saveFullscreenSignature());
+        }
+        
+        // Fullscreen signature canvas events
+        this.setupFullscreenCanvasEvents();
+        
+        // Window resize listener for fullscreen canvas
         window.addEventListener('resize', () => {
-            if (this.modal && this.modal.style.display !== 'none') {
-                setTimeout(() => this.resizeCanvas(), 100);
+            if (this.signatureModal && this.signatureModal.style.display !== 'none') {
+                setTimeout(() => this.resizeFullscreenCanvas(), 100);
             }
         });
     }
     
-    setupCanvasEvents() {
-        if (!this.canvas) return;
+    setupFullscreenCanvasEvents() {
+        if (!this.fullscreenCanvas) return;
         
         // Mouse events
-        this.canvas.addEventListener('mousedown', (e) => this.startDrawing(e));
-        this.canvas.addEventListener('mousemove', (e) => this.draw(e));
-        this.canvas.addEventListener('mouseup', () => this.stopDrawing());
-        this.canvas.addEventListener('mouseout', () => this.stopDrawing());
+        this.fullscreenCanvas.addEventListener('mousedown', (e) => this.startFullscreenDrawing(e));
+        this.fullscreenCanvas.addEventListener('mousemove', (e) => this.drawFullscreen(e));
+        this.fullscreenCanvas.addEventListener('mouseup', () => this.stopFullscreenDrawing());
+        this.fullscreenCanvas.addEventListener('mouseout', () => this.stopFullscreenDrawing());
         
-        // Touch events
-        this.canvas.addEventListener('touchstart', (e) => {
+        // Touch events for mobile
+        this.fullscreenCanvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             if (e.touches.length === 1) {
-                this.startDrawing(e);
+                this.startFullscreenDrawing(e);
             }
         }, { passive: false });
         
-        this.canvas.addEventListener('touchmove', (e) => {
+        this.fullscreenCanvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
             if (e.touches.length === 1) {
-                this.draw(e);
+                this.drawFullscreen(e);
             }
         }, { passive: false });
         
-        this.canvas.addEventListener('touchend', (e) => {
+        this.fullscreenCanvas.addEventListener('touchend', (e) => {
             e.preventDefault();
-            this.stopDrawing();
+            this.stopFullscreenDrawing();
         }, { passive: false });
         
-        this.canvas.addEventListener('touchcancel', (e) => {
+        this.fullscreenCanvas.addEventListener('touchcancel', (e) => {
             e.preventDefault();
-            this.stopDrawing();
+            this.stopFullscreenDrawing();
         }, { passive: false });
+    }
+    
+    // Fullscreen signature methods
+    openFullscreenSignature() {
+        if (!this.signatureModal) return;
+        
+        // Try to force landscape orientation on mobile
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(() => {
+                console.log('Could not lock orientation');
+            });
+        }
+        
+        // Show modal
+        this.signatureModal.style.display = 'flex';
+        
+        // Initialize canvas after modal is visible
+        setTimeout(() => {
+            this.resizeFullscreenCanvas();
+            this.clearFullscreenSignature();
+        }, 100);
+        
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+    }
+    
+    closeFullscreenSignature() {
+        if (!this.signatureModal) return;
+        
+        // Unlock orientation
+        if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+        }
+        
+        // Hide modal
+        this.signatureModal.style.display = 'none';
+        
+        // Restore body scroll
+        document.body.style.overflow = '';
+    }
+    
+    clearFullscreenSignature() {
+        if (!this.fullscreenCanvas || !this.fullscreenCtx) return;
+        
+        // Clear canvas
+        this.fullscreenCtx.clearRect(0, 0, this.fullscreenCanvas.width, this.fullscreenCanvas.height);
+        
+        // Reset drawing state
+        this.isDrawing = false;
+        this.hasSignature = false;
+    }
+    
+    saveFullscreenSignature() {
+        if (!this.fullscreenCanvas || !this.hasSignature) {
+            alert('Vänligen signera innan du sparar');
+            return;
+        }
+        
+        // Create compressed signature image
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // Set desired output size (300x150px as requested)
+        tempCanvas.width = 300;
+        tempCanvas.height = 150;
+        
+        // Fill with white background
+        tempCtx.fillStyle = 'white';
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        
+        // Scale and draw the signature
+        tempCtx.drawImage(this.fullscreenCanvas, 0, 0, tempCanvas.width, tempCanvas.height);
+        
+        // Convert to base64 PNG
+        this.signatureBase64 = tempCanvas.toDataURL('image/png');
+        
+        // Update preview
+        this.updateSignaturePreview();
+        
+        // Close fullscreen modal
+        this.closeFullscreenSignature();
+        
+        // Show confirmation
+        this.showSignatureConfirmation();
+    }
+    
+    updateSignaturePreview() {
+        if (!this.signatureBase64) return;
+        
+        // Hide placeholder, show image
+        if (this.signaturePlaceholder) {
+            this.signaturePlaceholder.style.display = 'none';
+        }
+        
+        if (this.signatureImage) {
+            this.signatureImage.src = this.signatureBase64;
+            this.signatureImage.style.display = 'block';
+        }
+        
+        // Show clear button
+        const clearBtn = document.getElementById('clear-signature');
+        if (clearBtn) {
+            clearBtn.style.display = 'block';
+        }
+    }
+    
+    showSignatureConfirmation() {
+        // Create temporary confirmation message
+        const confirmation = document.createElement('div');
+        confirmation.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #28a745;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        `;
+        confirmation.innerHTML = '✅ Signering sparad!<br><small>Klar för skickas till Zapier</small>';
+        
+        document.body.appendChild(confirmation);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            if (confirmation.parentNode) {
+                confirmation.parentNode.removeChild(confirmation);
+            }
+        }, 3000);
+    }
+    
+    // Fullscreen drawing methods
+    startFullscreenDrawing(e) {
+        this.isDrawing = true;
+        this.hasSignature = true;
+        
+        const point = this.getEventPoint(e, this.fullscreenCanvas);
+        this.fullscreenCtx.beginPath();
+        this.fullscreenCtx.moveTo(point.x, point.y);
+    }
+    
+    drawFullscreen(e) {
+        if (!this.isDrawing) return;
+        
+        const point = this.getEventPoint(e, this.fullscreenCanvas);
+        this.fullscreenCtx.lineTo(point.x, point.y);
+        this.fullscreenCtx.stroke();
+    }
+    
+    stopFullscreenDrawing() {
+        if (this.isDrawing) {
+            this.isDrawing = false;
+            this.fullscreenCtx.beginPath();
+        }
+    }
+    
+    getEventPoint(e, canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+        };
     }
     
     openModal() {
@@ -3211,16 +3412,30 @@ class AdditionalServiceManager {
     }
     
     clearSignature() {
-        if (this.ctx && this.canvas) {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.hasSignature = false;
-            this.hideError();
+        // Clear the signature preview and hide image
+        if (this.signatureImage) {
+            this.signatureImage.style.display = 'none';
         }
+        
+        if (this.signaturePlaceholder) {
+            this.signaturePlaceholder.style.display = 'block';
+        }
+        
+        // Clear signature data
+        this.signatureBase64 = null;
+        this.hasSignature = false;
+        
+        // Hide clear button
+        const clearBtn = document.getElementById('clear-signature');
+        if (clearBtn) {
+            clearBtn.style.display = 'none';
+        }
+        
+        this.hideError();
     }
     
     getSignatureBase64() {
-        if (!this.hasSignature) return null;
-        return this.canvas.toDataURL('image/png');
+        return this.signatureBase64;
     }
     
     validateForm() {
@@ -3240,7 +3455,7 @@ class AdditionalServiceManager {
             return false;
         }
         
-        if (!this.hasSignature) {
+        if (!this.signatureBase64) {
             this.showError('Signatur krävs för att godkänna tilläggstjänsten');
             return false;
         }
@@ -3286,6 +3501,11 @@ class AdditionalServiceManager {
         const priceEl = document.getElementById('additional-service-price');
         const commentEl = document.getElementById('additional-service-comment');
         
+        // Signatur-data för Zapier
+        const signatureBase64 = this.getSignatureBase64();
+        const signatureTimestamp = new Date().toISOString();
+        const hasSignature = !!signatureBase64;
+        
         return {
             kundInfo: {
                 namn: nameEl ? nameEl.value : '',
@@ -3295,8 +3515,16 @@ class AdditionalServiceManager {
             tilläggstyp: typeEl ? typeEl.value : '',
             pris: priceEl ? parseFloat(priceEl.value) || 0 : 0,
             kommentar: commentEl ? commentEl.value || '' : '',
-            signaturBild: this.getSignatureBase64(),
-            tidsstämpel: new Date().toISOString(),
+            
+            // Signatur-data för Zapier-integration
+            signatur_base64: signatureBase64,
+            signatur_timestamp: signatureTimestamp,
+            signatur_tillagd: hasSignature,
+            
+            // Legacy field för bakåtkompatibilitet
+            signaturBild: signatureBase64,
+            
+            tidsstämpel: signatureTimestamp,
             ursprungligtAnbud: originalAnbudsId,
             källa: 'Solida Städ & Fönsterputs AB - Tilläggstjänst'
         };
