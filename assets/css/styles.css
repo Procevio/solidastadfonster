@@ -651,7 +651,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     border: 1px solid var(--border-light);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-xs);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 0;
     box-shadow: 0 2px 8px var(--shadow-subtle);
 }
 
@@ -676,6 +676,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .tab-content {
     display: none;
+    margin-top: 0;
+    padding-top: 0;
 }
 
 .tab-content.active {
@@ -686,6 +688,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .quote-form {
     max-width: 800px;
     margin: 0 auto;
+    margin-top: 0;
+    padding-top: 0;
     width: 100%;
 }
 
@@ -696,6 +700,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     padding: var(--spacing-xl);
     margin-bottom: var(--spacing-lg);
     box-shadow: 0 2px 8px var(--shadow-subtle);
+}
+
+/* Minimize space between tabs and first form section - only 12px gap */
+.quote-form .form-section:first-child {
+    margin-top: 12px;
 }
 
 .form-section h3 {
@@ -1408,6 +1417,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
         padding: var(--spacing-md);
         margin-bottom: var(--spacing-md);
         border-radius: var(--border-radius);
+    }
+    
+    /* Even tighter spacing on mobile */
+    .quote-form .form-section:first-child {
+        margin-top: 8px;
     }
     
     .form-section h3 {
@@ -2395,14 +2409,18 @@ body[data-theme="dark"] .nav-btn::before {
     
     .signature-fullscreen-body {
         flex: 1;
-        padding: 0.25rem;
+        padding: 0;
         height: 100vh;
+        width: 100vw;
     }
     
     .signature-fullscreen-canvas {
         max-height: 100vh;
-        height: calc(100vh - 0.5rem);
-        border-radius: 4px;
+        height: 100vh;
+        width: 100vw;
+        max-width: 100vw;
+        border-radius: 0;
+        border: none;
     }
     
     .signature-fullscreen-controls {
