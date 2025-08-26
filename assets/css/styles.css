@@ -651,7 +651,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     border: 1px solid var(--border-light);
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-xs);
-    margin-bottom: -4px;
+    margin-bottom: var(--spacing-lg);
     box-shadow: 0 2px 8px var(--shadow-subtle);
 }
 
@@ -676,7 +676,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 .tab-content {
     display: none;
-    margin-top: -12px;
+    margin-top: 0;
     padding-top: 0;
 }
 
@@ -688,7 +688,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .quote-form {
     max-width: 800px;
     margin: 0 auto;
-    margin-top: -8px;
+    margin-top: 0;
     padding-top: 0;
     width: 100%;
 }
@@ -702,13 +702,28 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     box-shadow: 0 2px 8px var(--shadow-subtle);
 }
 
-/* Eliminate space between tabs and first form section */
+/* Consistent spacing for all tabs */
 .tab-content.active {
-    margin-top: -16px;
+    margin-top: 0;
 }
 
 .quote-form .form-section:first-child {
     margin-top: 0;
+}
+
+/* Force consistent spacing specifically for Tilläggstjänst tab */
+#tillaggtjanst {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+#tillaggtjanst .quote-form {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+#tillaggtjanst .form-section:first-child {
+    margin-top: 0 !important;
 }
 
 .form-section h3 {
@@ -1392,7 +1407,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     }
     
     .company-logo {
-        height: 60px;
+        height: 80px;
     }
     
     .navigation-bar {
@@ -1423,9 +1438,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
         border-radius: var(--border-radius);
     }
     
-    /* Even tighter spacing on mobile */
+    /* Consistent spacing on mobile */
     .quote-form .form-section:first-child {
-        margin-top: 8px;
+        margin-top: 0;
     }
     
     .form-section h3 {
@@ -1813,7 +1828,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     }
     
     .company-logo {
-        height: 50px;
+        height: 70px;
     }
     
     .navigation-bar {
