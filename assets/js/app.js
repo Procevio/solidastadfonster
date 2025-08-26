@@ -3066,22 +3066,27 @@ class AdditionalServiceManager {
     resizeFullscreenCanvas() {
         if (!this.fullscreenCanvas || !this.fullscreenCtx) return;
         
+        // Force canvas to use full viewport dimensions
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
         // Get device pixel ratio for high DPI support
         const dpr = window.devicePixelRatio || 1;
-        const rect = this.fullscreenCanvas.getBoundingClientRect();
         
         // Set the internal size to the display size multiplied by dpr
-        this.fullscreenCanvas.width = rect.width * dpr;
-        this.fullscreenCanvas.height = rect.height * dpr;
+        this.fullscreenCanvas.width = width * dpr;
+        this.fullscreenCanvas.height = height * dpr;
+        
+        // Set the display size to full viewport
+        this.fullscreenCanvas.style.width = width + 'px';
+        this.fullscreenCanvas.style.height = height + 'px';
         
         // Scale the context to ensure correct drawing operations
         this.fullscreenCtx.scale(dpr, dpr);
         
-        // Set the display size to the original size
-        this.fullscreenCanvas.style.width = rect.width + 'px';
-        this.fullscreenCanvas.style.height = rect.height + 'px';
-        
         this.setupFullscreenCanvasStyles();
+        
+        console.log(`📱 Canvas resized to: ${width}x${height} (DPR: ${dpr})`);
     }
     
     setupFullscreenCanvasStyles() {
@@ -3161,6 +3166,16 @@ class AdditionalServiceManager {
                 setTimeout(() => this.resizeFullscreenCanvas(), 100);
             }
         });
+        
+        // Orientation change listener for mobile devices
+        window.addEventListener('orientationchange', () => {
+            if (this.signatureModal && this.signatureModal.style.display !== 'none') {
+                // Multiple resize attempts to handle orientation change properly
+                setTimeout(() => this.resizeFullscreenCanvas(), 100);
+                setTimeout(() => this.resizeFullscreenCanvas(), 300);
+                setTimeout(() => this.resizeFullscreenCanvas(), 600);
+            }
+        });
     }
     
     setupFullscreenCanvasEvents() {
@@ -3217,6 +3232,11 @@ class AdditionalServiceManager {
             this.resizeFullscreenCanvas();
             this.clearFullscreenSignature();
         }, 100);
+        
+        // Additional resize check for mobile orientation changes
+        setTimeout(() => {
+            this.resizeFullscreenCanvas();
+        }, 500);
         
         // Prevent body scroll
         document.body.style.overflow = 'hidden';
