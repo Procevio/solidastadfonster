@@ -3323,7 +3323,7 @@ class AdditionalServiceManager {
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             text-align: center;
         `;
-        confirmation.innerHTML = '✅ Signering sparad!<br><small>Klar för skickas till Zapier</small>';
+        confirmation.innerHTML = '✅ Signering sparad!';
         
         document.body.appendChild(confirmation);
         

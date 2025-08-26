@@ -2383,30 +2383,48 @@ body[data-theme="dark"] .nav-btn::before {
 
 /* Mobile landscape optimization */
 @media (max-width: 768px) and (orientation: landscape) {
+    .signature-fullscreen-content {
+        flex-direction: row;
+        height: 100vh;
+        max-height: 100vh;
+    }
+    
     .signature-fullscreen-header {
-        padding: 0.5rem 1rem;
-    }
-    
-    .signature-fullscreen-header h2 {
-        font-size: 1.25rem;
-    }
-    
-    .signature-orientation-notice {
         display: none;
     }
     
-    .signature-fullscreen-controls {
-        padding: 0.75rem 1rem;
-    }
-    
-    .signature-control-btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
-        min-width: 90px;
+    .signature-fullscreen-body {
+        flex: 1;
+        padding: 0.25rem;
+        height: 100vh;
     }
     
     .signature-fullscreen-canvas {
-        max-height: 85vh;
+        max-height: 100vh;
+        height: calc(100vh - 0.5rem);
+        border-radius: 4px;
+    }
+    
+    .signature-fullscreen-controls {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid #dee2e6;
+        padding: 0.5rem;
+        flex-direction: row;
+        justify-content: center;
+        gap: 0.5rem;
+        z-index: 10000;
+    }
+    
+    .signature-control-btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        min-width: 80px;
+        border-radius: 4px;
     }
 }
 
@@ -2437,6 +2455,14 @@ body[data-theme="dark"] .signature-fullscreen-canvas {
 body[data-theme="dark"] .signature-fullscreen-controls {
     background: var(--surface-primary);
     border-color: var(--border-light);
+}
+
+/* Dark theme for landscape fixed controls */
+@media (max-width: 768px) and (orientation: landscape) {
+    body[data-theme="dark"] .signature-fullscreen-controls {
+        background: rgba(55, 65, 81, 0.95);
+        border-top-color: var(--border-light);
+    }
 }
 
 body[data-theme="dark"] .signature-preview {
